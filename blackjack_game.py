@@ -216,7 +216,7 @@ class BlackjackApp(QWidget):
             self.status_label.setText("버스트! 당신은 졌습니다.")
             self.end_game(0)
 
-    def stand(self):
+    async def stand(self):
         """플레이어가 스탠드."""
         self.display_cards(hide_dealer_first_card=False)
         while calculate_score(self.dealer_hand) < 17:
