@@ -80,7 +80,7 @@ class BlackjackApp(QWidget):
         self.main_layout.addWidget(self.rules_label)
 
         # 상태 및 자본금 영역
-        self.status_label = QLabel("게임을 시작하려면 베팅하세요", self)
+        self.status_label = QLabel("베팅해서 당신의 운을 시험하세요", self)
         self.status_label.setAlignment(Qt.AlignCenter)
         self.status_label.setFont(QFont("Arial", 16))
         self.main_layout.addWidget(self.status_label)
@@ -172,11 +172,11 @@ class BlackjackApp(QWidget):
         self.bet_amount = 0
 
         self.update_money_display()
-        self.status_label.setText("당신의 운을 시험하세요")
         self.bet_input.setEnabled(True)
         self.place_bet_button.setEnabled(True)
         self.hit_button.setEnabled(False)
         self.stand_button.setEnabled(False)
+        self.reset_button.setEnabled(False)
 
         for layout in [self.player_cards_layout, self.dealer_cards_layout]:
             for i in reversed(range(layout.count())):
@@ -207,6 +207,7 @@ class BlackjackApp(QWidget):
         self.display_cards(hide_dealer_first_card=True)
         self.hit_button.setEnabled(True)
         self.stand_button.setEnabled(True)
+        self.reset_button.setEnabled(False)
 
         player_score = calculate_score(self.player_hand)
         if player_score == 21:
@@ -253,7 +254,6 @@ class BlackjackApp(QWidget):
         """플레이어가 스탠드."""
         self.display_cards(hide_dealer_first_card=False)
         while calculate_score(self.dealer_hand) < 17:
-            time.sleep(1)
             self.dealer_hand.append(self.draw_card())
             self.display_cards(hide_dealer_first_card=False)
 
@@ -274,6 +274,7 @@ class BlackjackApp(QWidget):
         """게임 종료 처리."""
         self.hit_button.setEnabled(False)
         self.stand_button.setEnabled(False)
+        self.reset_button.setEnabled(True)
 
         if result == 1:  # 플레이어 승리
             self.player_money += self.bet_amount * 2
@@ -292,7 +293,7 @@ class BlackjackApp(QWidget):
             QMessageBox.information(self, "게임 종료", "자본금을 모두 잃었습니다.")
             self.save_high_scores()  # 게임 종료 시 점수 저장
             # self.reset_game(initial=True)
-            sys.exit(app.exec_())
+            sys.exit()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
