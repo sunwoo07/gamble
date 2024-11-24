@@ -253,7 +253,6 @@ class BlackjackApp(QWidget):
         """플레이어가 스탠드."""
         self.display_cards(hide_dealer_first_card=False)
         while calculate_score(self.dealer_hand) < 17:
-            time.sleep(1)
             self.dealer_hand.append(self.draw_card())
             self.display_cards(hide_dealer_first_card=False)
 
