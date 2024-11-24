@@ -1,13 +1,40 @@
 import sys
+import json
+import os
 import time
 from random import shuffle
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QMessageBox
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QMessageBox, QInputDialog
 )
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import Qt
-import blackjack_func
 
+def create_deck():
+    """6덱의 카드를 생성."""
+    suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
+    values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
+    return [{'suit': suit, 'value': value} for suit in suits for value in values] * 6
+
+def calculate_score(hand):
+    """카드 점수를 계산."""
+    score = 0
+    ace_count = 0
+    for card in hand:
+        if card['value'].isdigit():
+            score += int(card['value'])
+        elif card['value'] in ['Jack', 'Queen', 'King']:
+            score += 10
+        elif card['value'] == 'Ace':
+            score += 11
+            ace_count += 1
+    while score > 21 and ace_count:
+        score -= 10
+        ace_count -= 1
+    return score
+
+def get_card_image(card):
+    """카드 이미지를 파일 경로로 반환."""
+    return f"images/{card['value']}_of_{card['suit']}.png"
 
 class BlackjackApp(QWidget):
     def __init__(self):
@@ -36,7 +63,7 @@ class BlackjackApp(QWidget):
         self.main_layout.addWidget(self.rules_label)
 
         # 상태 및 자본금 영역
-        self.status_label = QLabel("게임을 시작하려면 베팅하세요", self)
+        self.status_label = QLabel("베팅해서 당신의 운을 시험하세요", self)
         self.status_label.setAlignment(Qt.AlignCenter)
         self.status_label.setFont(QFont("Arial", 16))
         self.main_layout.addWidget(self.status_label)
@@ -110,11 +137,11 @@ class BlackjackApp(QWidget):
         self.bet_amount = 0
 
         self.update_money_display()
-        self.status_label.setText("당신의 운을 시험하세요")
         self.bet_input.setEnabled(True)
         self.place_bet_button.setEnabled(True)
         self.hit_button.setEnabled(False)
         self.stand_button.setEnabled(False)
+        self.reset_button.setEnabled(False)
 
         for layout in [self.player_cards_layout, self.dealer_cards_layout]:
             for i in reversed(range(layout.count())):
@@ -211,6 +238,7 @@ class BlackjackApp(QWidget):
         """게임 종료 처리."""
         self.hit_button.setEnabled(False)
         self.stand_button.setEnabled(False)
+        self.reset_button.setEnabled(True)
 
         if result == 1:  # 플레이어 승리
             self.player_money += self.bet_amount * 2
@@ -223,11 +251,4 @@ class BlackjackApp(QWidget):
 
         if self.player_money <= 0:
             QMessageBox.information(self, "게임 종료", "자본금을 모두 잃었습니다.")
-            self.reset_game(initial=True)
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = BlackjackApp()
-    window.show()
-    sys.exit(app.exec_())
+            sys.exit()
