@@ -1,4 +1,4 @@
-from blackjack_func import *
+from blackjack.blackjack import *
 
 
 if __name__ == "__main__":
