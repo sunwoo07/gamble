@@ -3,8 +3,8 @@ import numpy as np
 
 # 초기 조건 및 매개 변수 설정
 initial_money = 100000  # 시작 자본금
-win_rate = 0.49         # 승률 49%
-n_trials = 50           # 시행 횟수
+win_rate = 0.48         # 승률 49%
+n_trials = 25           # 시행 횟수
 
 # 결과를 저장할 변수 초기화
 trials = np.arange(1, n_trials + 1)  # 시행 횟수 1부터 n_trials까지
@@ -17,7 +17,8 @@ current_wins = 0
 
 for i in range(n_trials):
     # 승률에 따라 승리 또는 패배 결정
-    bat = current_money * (np.random.randint(1, 101)/100)  # 배팅 금액은 자본의 0~100%에서 랜덤 설정
+    bat = current_money * (np.random.randint(1, 100)/100)  # 배팅 금액은 자본의 0~99%에서 랜덤 설정
+    print(bat)
     current_money = current_money - bat  # 자본에서 배팅 금액 차감
     if np.random.rand() < win_rate:
         current_money = current_money + (bat * 2)  # 승리 시 자본이 배팅 금액의 2배 상승

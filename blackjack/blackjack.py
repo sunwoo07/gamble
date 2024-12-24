@@ -252,3 +252,9 @@ class BlackjackApp(QWidget):
         if self.player_money <= 0:
             QMessageBox.information(self, "게임 종료", "자본금을 모두 잃었습니다.")
             sys.exit()
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = BlackjackApp()
+    window.show()
+    sys.exit(app.exec_())
