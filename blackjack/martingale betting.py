@@ -8,6 +8,7 @@
 '''
 from matplotlib import pyplot as plt
 import numpy as np
+import statistics
 
 def martin():
     a = 1 #처음에 걸 자본금(a)
@@ -32,15 +33,21 @@ trial = np.arange(1,101)
 result_n = []
 result_profit = []
 result_net_profit = []
+
 for i in range(100):
     result_n.append(martin()[0])
     result_profit.append(martin()[1])
     result_net_profit.append(martin()[2])
 
-fig = plt.figure(figsize=(16,9))
-ax1 = fig.add_subplot(1,3,1)
-ax1.plot()
-ax1.set(xlim=[0., 1.], ylim=[-0.5, 2.5], title='Example', xlabel='xAxis', ylabel='yAxis')
-ax2 = fig.add_subplot(1,3,2)
-ax3 = fig.add_subplot(1,3,3)
-plt.show()
+average_result = statistics.mean(result_n)
+average_profit = statistics.mean(result_profit)
+average_net_profit = statistics.mean(result_net_profit)
+print(f"평균 횟수 {average_result}, 평균 이익 {average_profit}, 평균 순이익 {average_net_profit}")
+
+# fig = plt.figure(figsize=(16,9))
+# ax1 = fig.add_subplot(1,3,1)
+# ax1.plot()
+# ax1.set(xlim=[0., 1.], ylim=[-0.5, 2.5], title='Example', xlabel='xAxis', ylabel='yAxis')
+# ax2 = fig.add_subplot(1,3,2)
+# ax3 = fig.add_subplot(1,3,3)
+# plt.show()
